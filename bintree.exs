@@ -14,7 +14,7 @@ defmodule Bintree do
     def member(e, {:node, _, _, right})  do
         member(e, right)
     end
-
+    
 
     def insert(e, :nil)  do  {:leaf, e}  end
     def insert(e, {:leaf, v}) when e < v  do  {:node, v, {:leaf, e}, :nil}   end
@@ -91,6 +91,7 @@ defmodule Bintree do
     
 
 end
+
 
 IO.inspect(
 
