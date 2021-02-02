@@ -121,15 +121,3 @@ IO.inspect(
     )
 )
 
-# IO.inspect(
-#         TTTree.insertf(
-#             7, :lame,
-#             TTTree.insertf(
-#                 8, :dumb,
-#                 TTTree.insertf(
-#                     5, :cool, 
-#                     {:leaf, 4, :poo}
-#                 )
-#             )
-#         )
-# )

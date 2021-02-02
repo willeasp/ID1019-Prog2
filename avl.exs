@@ -123,34 +123,55 @@ defmodule AVLtree do
         {:node, zk, zv, 0, {:node, xk, xv, 0, a, b}, {:node, yk, yv, 0, c, d}}
     end
 
+    def get(nil, _) do :no end
+    def get({:node, key, val, _, _, _}, key) do {:ok, val} end
+    def get({:node, k, _, _, l, r}, key) do
+        cond do
+            key < k ->
+                get(l, key)
+            true ->
+                get(r, key)
+        end
+    end
+
+    def to_list(tree) do to_list(tree, []) end
+    def to_list(nil, list) do list end
+    def to_list({:node, key, val, _, l, r}, agg) do
+        agg = [{key, val} | agg]
+        to_list(r, to_list(l, agg))
+    end
+
+
 end
 
 IO.inspect(
-    AVLtree.insert(
-        {
-            :node, 13, :k, -1, 
+    AVLtree.get(
+        AVLtree.insert(
             {
-                :node, 10, :k, -1, 
+                :node, 13, :s, -1, 
                 {
-                    :node, 5, :k, 0, 
+                    :node, 10, :k, -1, 
                     {
-                        :node, 4, :k, 0, nil, nil
+                        :node, 5, :k, 0, 
+                        {
+                            :node, 4, :k, 0, nil, nil
+                        },
+                        {
+                            :node, 6, :k, 0, nil, nil
+                        }
                     },
                     {
-                        :node, 6, :k, 0, nil, nil
+                        :node, 11, :b, 0, nil, nil
                     }
                 },
                 {
-                    :node, 11, :k, 0, nil, nil
+                    :node, 15, :k, +1, nil,
+                    {
+                        :node, 16, :s, 0, nil, nil
+                    }
                 }
             },
-            {
-                :node, 15, :k, +1, nil,
-                {
-                    :node, 16, :k, 0, nil, nil
-                }
-            }
-        },
-        7, :new
+            7, :new
+        ), 16
     )
 )

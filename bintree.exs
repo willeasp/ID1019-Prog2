@@ -95,7 +95,8 @@ end
 
 IO.inspect(
 
-    Bintree.add({3, :new}, {
+    Bintree.add({3, :new}, 
+    {
         :node,
         5,
         :five,
@@ -131,6 +132,7 @@ IO.inspect(
                 :nil
             }
         }
-    })
+    }
+    )
 
 )
