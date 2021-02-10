@@ -65,7 +65,7 @@ defmodule Huffman do
     end
     def encode_table({c, _}, agg, path) do [{c, Huffman.Help.reverse(path)} | agg] end
 
-    # create a list of zeros
+    # create a list of zeros and 1s
     def encode([], _) do [] end
     def encode([c | t], table) do
         encode({c, table}) ++ encode(t, table)
@@ -95,22 +95,25 @@ defmodule Huffman do
         end
     end
 
-    # better decode is smarter and goes down the tree using 0s and 1s
-    # args: seq, tree
-    # def deco(seq, tree)
-    # def deco(seq, tree, agg)
-    # def deco([h | t], {{l, r}, _}, full_tree) do
-    #     case h do
-    #         0 -> 
-    #             deco(t, l)
-    #         1 -> 
-    #             deco(t, r)
-    #     end
-    # end
-    # def deco([h | t], {c, _}, full_tree) do c end
 
+    # enco tries to be faster!
+    # def enco([], _) do [] end
+    # def enco(seq, tree) do
+    #     {char, rest} = enco_char(seq, tree)
+    #     [char | enco(rest, tree)]
+    # end
+    # def enco_table(tree) do enco_table(tree, [], []) end
+    # def enco_table({{l, r}, _}, agg, path) do
+    #     left = enco_table(l, agg, [0 | path])
+    #     enco_table(r, left, [1 | path])
+    # end
+    # def enco_table({c, _}, agg, path) do [{c, Huffman.Help.reverse(path)} | agg] end
+
+
+    # deco is smarter and goes down the tree using 0s and 1s
+    # args: seq, tree
+    def deco([], _) do [] end
     def deco(seq, tree) do
-        IO.inspect("decode")
         {char, rest} = deco_char(seq, tree)
         [char | deco(rest, tree)]
     end
@@ -163,17 +166,17 @@ defmodule Huffman do
 
         case :unicode.characters_to_list(binary, :utf8) do
             {:incomplete, list, _} ->
-            list;
+                list;
             list ->
-            list
+                list
         end
     end
 end
 
-# {time, text} = :timer.tc(Huffman, :read, ["text.txt", 10000000000])
-# IO.inspect({time/1000000, length(text)}, label: "text length")
+{time, text} = :timer.tc(Huffman, :read, ["text.txt", 10000000000])
+IO.inspect({time/1000000, length(text)}, label: "text length")
 
-text = 'hello'
+# text = 'hello'
 
 {time, tree} = :timer.tc(Huffman, :tree, [text])
 IO.inspect({time/1000000, tree}, label: "tree")
