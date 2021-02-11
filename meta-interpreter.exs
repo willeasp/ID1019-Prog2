@@ -17,7 +17,7 @@ defmodule Env do
     of the variable id to the structure str 
     has been added to the environment env
     """
-    def add(id, str, env) do [{id, str} | env] end
+    def add(id, str, env) do [{id, str} | remove([id], env)] end
 
     @doc """
     return either {id, str}, if the variable id was bound, or nil
@@ -40,11 +40,16 @@ defmodule Env do
 
 
     def test() do
+        IO.inspect("Env test")
         env = new()
         env = add(:x, :foo, env)
         env = add(:y, :bar, env)
         env = add(:z, :zot, env)
         IO.inspect(env, label: "env")
+
+        env = add(:z, :cool, env)
+        IO.inspect(env, label: "env")
+
 
         IO.inspect(lookup(:x, env), label: "lookup success")
         IO.inspect(lookup(:k, env), label: "lookup fail")
@@ -61,7 +66,7 @@ defmodule Env do
     
 end
 
-# Env.test()
+Env.test()
 
 
 defmodule Eager do
