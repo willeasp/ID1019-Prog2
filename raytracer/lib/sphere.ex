@@ -1,8 +1,18 @@
 defmodule Sphere do
 
     @color {1.0, 0.4, 0.4}
+    @brilliance 0
+    @transparency 0
+    @refraction 1.5
     
-    defstruct pos: {0, 0, 0}, radius: 2, color: @color
+    defstruct(
+        radius: 2,
+        pos: {0, 0, 0},
+        color: @color,
+        brilliance: @brilliance,
+        transparency: @transparency,
+        refraction: @refraction
+    )
 
     defimpl Object do
         def intersect(sphere, ray) do

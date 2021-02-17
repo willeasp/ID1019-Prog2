@@ -22,3 +22,5 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 raytracer-*.tar
 
+plane8.ppm snap0.ppm snap1.ppm snap2.ppm snap3.ppm snap4.ppm snap5.ppm snap6.ppm snap7.ppm snopp.ppm
+*.ppm

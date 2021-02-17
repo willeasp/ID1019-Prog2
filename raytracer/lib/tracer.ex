@@ -3,26 +3,31 @@ defmodule Tracer do
     # rgb colors
     @black {0, 0, 0}
     @white {1, 1, 1}
+    @delta 0.001
 
-    def tracer(camera, objects) do
+    def tracer(camera, world) do
         {w, h} = camera.size
-        for y <- 1..h, do: for(x <- 1..w, do: trace(x, y, camera, objects))
+        for y <- 1..h, do: for(x <- 1..w, do: trace(x, y, camera, world))
     end
 
-    def trace(x, y, camera, objects) do
+    defp trace(x, y, camera, world) do
         ray = Camera.ray(camera, x, y)
-        trace(ray, objects)
+        trace(ray, world)
     end
-    def trace(ray, objects) do
+    defp trace(ray, %World{objects: objects} = world) do
         case intersect(ray, objects) do
             {:inf, _} ->
-                @black
-            {_, object} ->
-                object.color
+                world.background
+            {d, obj} ->
+                i = Vector.add(ray.pos, Vector.smul(ray.dir, d - @delta))
+                normal = Object.normal(obj, ray, i)
+                visible = visible(i, world.lights, objects)
+                illumination = Light.combine(i, normal, visible)
+                Light.illuminate(obj, illumination, world)
         end
     end
 
-    def intersect(ray, objects) do
+    defp intersect(ray, objects) do
         List.foldl(objects, {:inf, nil},
             fn (object, sofar) ->
                 {dist, _} = sofar
@@ -36,4 +41,28 @@ defmodule Tracer do
             end
         )
     end
+
+    defp visible(point, lights, objs) do
+        Enum.filter(lights, fn light -> clear(point, light.pos, objs) end)
+    end
+
+    defp clear(point, origin, objs) do
+        dir = Vector.normalize(Vector.sub(origin, point))
+
+        List.foldl(objs, true, fn (obj, acc) ->
+            case acc do
+                false ->
+                    false
+
+                true ->
+                    case Object.intersect(obj, %Ray{pos: point, dir: dir}) do
+                        :no ->
+                            true
+
+                        _ ->
+                            false
+                    end
+            end
+        end)
+    end    
 end

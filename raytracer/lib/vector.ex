@@ -25,6 +25,25 @@ defmodule Vector do
         smul(x, 1/n)
     end
 
+    # Scaling a vector to a specified length.
+    def scale(x, l) do
+        n = norm(x)
+        # this will crash if N == 0!
+        smul(x, l / n)
+    end
+
+    # Square of a vector.
+    def sq(x) do
+        dot(x, x)
+    end
+
+    # Cross product, used to find a vector that as ortogonal to 
+    # both x and y.
+    def cross({x1, x2, x3}, {y1, y2, y3}) do
+        {x2 * y3 - x3 * y2, x3 * y1 - x1 * y3, x1 * y2 - x2 * y1}
+    end
+
+
     def test() do
         IO.inspect(smul({1, 1, 1}, 3), label: "{3, 3, 3}")
         IO.inspect(sub({1, 1, 1}, {1, 1, 1}), label: "{0, 0, 0}")
