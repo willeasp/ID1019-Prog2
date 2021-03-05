@@ -3,7 +3,7 @@ defmodule HTTP do
     Parse a HTTP request and return the request, the headers and the body separately
     """
     def parse_request(r0) do
-        {request, r1} = request_line(String.to_charlist(r0))
+        {request, r1} = request_line(r0)
         {headers, r2} = headers(r1)
         {body, _} = message_body(r2)
         {request, headers, body}
@@ -60,4 +60,18 @@ defmodule HTTP do
     Cheating by assuming everything that is left is a message body
     """
     def message_body(r), do: {r, []}
+
+    @doc """
+    Generate a HTTP OK response
+    """
+    def ok(body) do
+        "HTTP/1.1 200 OK\r\n\r\n#{body}"
+    end
+
+    @doc """
+    Convenient when we want to generate a request
+    """
+    def get(uri) do
+        "GET #{uri} HTTP/1.1\r\n\r\n"
+    end
 end
